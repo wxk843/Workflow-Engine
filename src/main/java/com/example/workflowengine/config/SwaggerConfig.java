@@ -46,7 +46,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket restfulApi() {
-        System.out.println("http://localhost:8081" + pathMapping + "swagger-ui.html");
+        System.out.println("http://localhost:8000" + pathMapping + "swagger-ui.html");
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("RestfulApi")

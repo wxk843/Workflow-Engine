@@ -1,13 +1,15 @@
 package com.example.workflowengine.controller;
 
+import com.example.workflowengine.model.ServiceResponse;
+import com.example.workflowengine.model.bean.WorkflowRelationFilterBean;
+import com.example.workflowengine.service.IWorkflowRelationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 /**
  * @author deray.wang
@@ -17,14 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Workflow")
 public class WorkflowController {
+    @Autowired
+    IWorkflowRelationService workflowRelationService;
     /**
-     * 用户登录
+     * 获取工作流程数据
      */
-    @ApiOperation(value = "查询用户接口", notes = "查询用户，返回所有的用户", response = String.class)
+    @ApiOperation(value = "获取工作流程数据", notes = "获取工作流程数据，返回所有的工作流", response = String.class)
     @ResponseBody
-    @RequestMapping(value = "/index", method = {RequestMethod.GET})
-    public String[] login(String userName, String password){
-        String[] strArray={"1","2","3"};
-        return strArray;
+    @RequestMapping(value = "/index", method = {RequestMethod.POST})
+    public ServiceResponse<List> workflowList(@Validated @RequestBody WorkflowRelationFilterBean filterBean, BindingResult bindingResult) {
+        //验证参数
+        if (bindingResult.hasErrors()) {
+            return ServiceResponse.createFailResponse("", 100, bindingResult.getFieldError().getDefaultMessage());
+        }
+        System.out.println(workflowRelationService.getWorkflow(filterBean));
+        return ServiceResponse.createSuccessResponse("", workflowRelationService.getWorkflow(filterBean));
     }
+
+//    public String[] login(String userName, String password){
+//        String[] strArray={"1","2","3"};
+//        return strArray;
+//    }
 }
